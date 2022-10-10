@@ -34,7 +34,9 @@ namespace API
                 opts.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
             });
             services.AddCors();
-            services.AddIdentityCore<User>()
+            services.AddIdentityCore<User>(opts=>{
+                opts.User.RequireUniqueEmail = true;
+            })
                     .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<StoreContext>();
             services.AddAuthentication();
