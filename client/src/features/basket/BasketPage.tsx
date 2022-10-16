@@ -1,10 +1,9 @@
 import { Add, Delete, Remove } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
-import { Box, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
-import { useState } from "react";
-import agent from "../../app/api/agent";
+import { Box, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
-import { addBasketItemAsync, removeBasketItemAsync, setBasket } from "./basketSlice";
+import { addBasketItemAsync, removeBasketItemAsync } from "./basketSlice";
 import BasketSummary from "./BasketSummary";
 
 export default function BasketPage(){
@@ -73,6 +72,14 @@ export default function BasketPage(){
         <Grid item xs={6}/>
         <Grid item xs={6}>
           <BasketSummary />
+          <Button
+              component ={Link}
+              to='/checkout'
+              variant = 'contained'
+              fullWidth
+          >
+            Checkout
+          </Button>
         </Grid>
       </Grid>
       </>
