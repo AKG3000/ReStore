@@ -13,10 +13,12 @@ import agent from "../../app/api/agent";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { Order } from "../../app/models/order";
 import { currencyFormat } from "../../app/utils/util";
+import OrderDetails from "./OrderDetails";
 
 export default function Orders() {
   const [orders,setOrders] = useState<Order[]|null>(null);
   const [loading,setLoading] = useState(true);
+  const [selectedOrder,setSelectedOrder] = useState(0);
 
   useEffect(()=>{
     agent.Orders.list()
@@ -24,6 +26,11 @@ export default function Orders() {
       .catch(error=>console.log(error))
       .finally(()=>setLoading(false))
   },[])
+
+  if(selectedOrder > 0 && orders){
+    return <OrderDetails order={orders?.find(o=>o.id ===selectedOrder)!} 
+    setSelectedOrder={setSelectedOrder}/>
+  }
 
 
   if(loading) return <LoadingComponent  message="Loading Orders ....."/>
@@ -51,8 +58,12 @@ export default function Orders() {
               <TableCell align="right">{currencyFormat(order.total)}</TableCell>
               <TableCell align="right">{order.orderDate.split('T')[0]}</TableCell>
               <TableCell align="right">{order.orderStatus}</TableCell>
-              <TableCell align="right">
-                <Button>View</Button>
+              <TableCell align="center">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={()=>setSelectedOrder(order.id)}
+                >View</Button>
               </TableCell>
             </TableRow>
           ))}
