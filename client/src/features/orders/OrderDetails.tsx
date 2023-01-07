@@ -1,19 +1,10 @@
 import {
-  Box,
   Button,
   Grid,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Typography,
 } from "@mui/material";
 import { BasketItem } from "../../app/models/basket";
 import { Order } from "../../app/models/order";
-import { currencyFormat } from "../../app/utils/util";
 import BasketSummary from "../basket/BasketSummary";
 import BasketTable from "../basket/BasketTable";
 
