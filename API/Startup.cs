@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection.Metadata;
@@ -38,7 +39,7 @@ namespace API
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPIv5", Version = "v1" });
-                c.AddSecurityDefinition("Bearer",new OpenApiSecurityScheme
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "Jwt Auth Header",
                     Name = "Authorization",
@@ -63,17 +64,20 @@ namespace API
                     }
                 });
             });
-            services.AddDbContext<StoreContext>(opts => {
-                opts.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+            services.AddDbContext<StoreContext>(opts =>
+            {
+                var postGreConnectionString = Configuration.GetConnectionString("DefaultConnection");
+                opts.UseNpgsql(postGreConnectionString);
             });
             services.AddCors();
-            services.AddIdentityCore<User>(opts => {
+            services.AddIdentityCore<User>(opts =>
+            {
                 opts.User.RequireUniqueEmail = true;
             })
             .AddRoles<Role>()
             .AddEntityFrameworkStores<StoreContext>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(opts => 
+                .AddJwtBearer(opts =>
                 {
                     opts.TokenValidationParameters = new TokenValidationParameters
                     {
@@ -105,7 +109,12 @@ namespace API
             //app.UseHttpsRedirection();
 
             app.UseRouting();
-            app.UseCors(options=>{
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
+            app.UseCors(options =>
+            {
                 options.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:3000");
             });
             app.UseAuthentication();
@@ -114,6 +123,7 @@ namespace API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapFallbackToController("Index", "Fallback");
             });
         }
     }
